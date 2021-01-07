@@ -1,0 +1,48 @@
+---
+- hosts: localhost
+#  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    - nginx
+
+  tasks:
+    - name: Copy Nginx server configuration in place.
+      become: yes
+      template:
+        src: templates/matrix.conf.j2
+        dest: /etc/nginx/conf.d/matrix.conf
+        mode: 0644
+      notify: restart nginx
+
+    - name: Pull synapse Container
+      containers.podman.podman_image:
+        name: "docker.io/avhost/docker-matrix"
+        tag: latest
+        pull: yes
+        state: present
+
+    - name: Restart synapse Container
+      containers.podman.podman_container:
+        name: matrix
+        image: avhost/docker-matrix
+        state: started
+        #restart: yes
+        recreate: yes
+        hostname: matrix.joeyengel.com
+        restart_policy: "no"
+        privileged: no #yes 
+        network: slirp4netns
+        publish: 
+          - 8008:8008
+          - 8448:8448
+        env:
+            PUID: '1000'
+            PGID: '1000'
+        volume:
+          - /matrixdata:/data:rw
+
+        detach: yes
+      tags: container-restart
