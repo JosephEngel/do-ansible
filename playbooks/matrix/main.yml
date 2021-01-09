@@ -50,9 +50,8 @@
     - name: Install required packages
       become: yes
       dnf:
-        name: "{{ item }}"
+        name: "{{ system_packages }}"
         state: present
-      with_items: "{{ system_packages }}"
       tags: requirements
 
     - name: Install the 'Development tools' package group
@@ -76,12 +75,11 @@
 
         - name: install pip packages
           pip:
-            name: "{{ item }}"
+            name: "{{ pip_packages }}"
             virtualenv: "{{ virtualenv_path }}"
             state: latest
             #virtualenv_python: python3
             virtualenv_command: "pyenv"
-          with_items: "{{ pip_packages }}"
   
       become: yes
       become_user: "{{ running_user }}"
