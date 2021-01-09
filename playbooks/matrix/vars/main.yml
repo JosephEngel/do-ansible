@@ -11,7 +11,7 @@ system_packages:
   - tk-devel
   - redhat-rpm-config
   - python36
-  - virtualenv
+  #- virtualenv
   - libffi-devel
   - openssl-devel
 
@@ -21,7 +21,7 @@ virtualenv_path: "/home/{{ running_user }}/synapse"
 
 pip_packages:
   - pip 
-  - virtualenv
+  #- virtualenv
   - six 
   - packaging
   - appdirs
