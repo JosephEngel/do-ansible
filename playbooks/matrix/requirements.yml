@@ -2,5 +2,5 @@
 roles:
   - ansible-role-nginx
   
-collections:
-- name: containers.podman
+#collections:
+#- name: containers.podman
