@@ -16,33 +16,79 @@
         dest: /etc/nginx/conf.d/matrix.conf
         mode: 0644
       notify: restart nginx
+      tags: nginx
 
-    - name: Pull synapse Container
-      containers.podman.podman_image:
-        name: "docker.io/avhost/docker-matrix"
-        tag: latest
-        pull: yes
+#    - name: Pull synapse Container
+#      containers.podman.podman_image:
+#        name: "docker.io/avhost/docker-matrix"
+#        tag: latest
+#        pull: yes
+#        state: present
+#
+#    - name: Restart synapse Container
+#      containers.podman.podman_container:
+#        name: matrix
+#        image: avhost/docker-matrix
+#        state: started
+#        #restart: yes
+#        recreate: yes
+#        hostname: matrix.joeyengel.com
+#        restart_policy: "no"
+#        privileged: no #yes 
+#        network: slirp4netns
+#        publish: 
+#          - 8008:8008
+#          - 8448:8448
+#        env:
+#            PUID: '991'
+#            PGID: '991'
+#        volume:
+#          - /matrixdata:/data:rw
+#
+#        detach: yes
+#      tags: container-restart
+    - name: Install required packages
+      become: yes
+      dnf:
+        name: "{{ item }}"
         state: present
+      with_items: "{{ system_packages }}"
+      tags: requirements
 
-    - name: Restart synapse Container
-      containers.podman.podman_container:
-        name: matrix
-        image: avhost/docker-matrix
-        state: started
-        #restart: yes
-        recreate: yes
-        hostname: matrix.joeyengel.com
-        restart_policy: "no"
-        privileged: no #yes 
-        network: slirp4netns
-        publish: 
-          - 8008:8008
-          - 8448:8448
-        env:
-            PUID: '1000'
-            PGID: '1000'
-        volume:
-          - /matrixdata:/data:rw
+    - name: Install the 'Development tools' package group
+      become: yes
+      dnf:
+        name: '@Development tools'
+        state: present
+      tags: requirements
 
-        detach: yes
-      tags: container-restart
+    - block:
+        - name: Create synapse dir
+          file:
+            path: "{{ virtualenv_path }}"
+            state: directory
+
+        - name: Create virtualenv
+          shell: "pyenv virtualenv venv_synapse"
+          #pip:
+          #  virtualenv: "{{ virtualenv_path }}"
+          #  virtualenv_python: python3
+
+        - name: install pip packages
+          pip:
+            name: "{{ item }}"
+            virtualenv: "{{ virtualenv_path }}"
+            state: latest
+            #virtualenv_python: python3
+            virtualenv_command: "pyenv"
+          with_items: "{{ pip_packages }}"
+  
+      become: yes
+      become_user: "{{ running_user }}"
+      tags: create_venv
+
+   # - name: Generate synapse configuration
+   #   become: yes
+   #   become_user: "{{ running_user }}"
+   #   shell: cd "{{ virtualenv_path }}" && source 
+
