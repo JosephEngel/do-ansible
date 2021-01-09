@@ -69,6 +69,8 @@
 
         - name: Create virtualenv
           shell: "pyenv virtualenv venv_synapse"
+          args:
+            executable: /bin/bash
           #pip:
           #  virtualenv: "{{ virtualenv_path }}"
           #  virtualenv_python: python3
