@@ -64,25 +64,35 @@
     - block:
         - name: Create synapse dir
           file:
-            path: "{{ virtualenv_path }}"
+            path: "{{ synapse_path }}"
             state: directory
 
+        - name: Check if virtualenv exists
+          stat:
+            path: "{{ virtualenv_path }}"
+          register: out_venv_exist
+        - debug:
+            var: out_venv_exist.stat.exists
+        
         - name: Create virtualenv
-          shell: "pyenv virtualenv venv_synapse"
+          shell: "{{ pyenv_cmd }} virtualenv {{ venv_name }}"
           args:
             executable: /bin/bash
-          #pip:
-          #  virtualenv: "{{ virtualenv_path }}"
-          #  virtualenv_python: python3
+          when: out_venv_exist.stat.exists == False
 
+        #- name: install pip packages
+        #  pip:
+        #    name: "{{ pip_packages }}"
+        #    virtualenv: "{{ venv_name }}"
+        #    state: latest
+        #    #virtualenv_python: python3
+        #    virtualenv_command: "{{ pyenv_cmd }}"
+        
         - name: install pip packages
-          pip:
-            name: "{{ pip_packages }}"
-            virtualenv: "{{ virtualenv_path }}"
-            state: latest
-            #virtualenv_python: python3
-            virtualenv_command: "pyenv"
-  
+          shell: "source ~/.bashrc; {{ pyenv_cmd }} activate {{ venv_name }}; pip install --upgrade {{ pip_packages }}"
+          args:
+            executable: /bin/bash
+
       become: yes
       become_user: "{{ running_user }}"
       tags: create_venv

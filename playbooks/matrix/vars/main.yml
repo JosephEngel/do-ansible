@@ -17,13 +17,19 @@ system_packages:
 
 running_user: joey
 
-virtualenv_path: "/home/{{ running_user }}/synapse"
+home: "/home/{{ running_user }}"
+synapse_path: "{{ home }}/synapse"
+venv_name: "venv_synapse"
+virtualenv_path: "{{ home }}/.pyenv/versions/{{ venv_name }}"
+pyenv_cmd: "{{ home }}/.pyenv/bin/pyenv"
 
-pip_packages:
-  - pip 
-  #- virtualenv
-  - six 
-  - packaging
-  - appdirs
-  - setuptools
-  - matrix-synapse
+#pip_packages:
+#  - pip 
+#  #- virtualenv
+#  - six 
+#  - packaging
+#  - appdirs
+#  - setuptools
+#  - matrix-synapse
+
+pip_packages: "pip six packaging appdirs setuptools matrix-synapse"
