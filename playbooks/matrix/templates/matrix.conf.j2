@@ -1,13 +1,13 @@
 server {
     listen 80;
-	#listen [::]:80;
-    server_name matrix.{{ domain }};
+	listen [::]:80;
+    server_name {{ subdomain }}.{{ domain }};
     return 301 https://$host$request_uri;
 }
 
 server {
     listen 443 ssl;
-    #listen [::]:443 ssl;
+    listen [::]:443 ssl;
     server_name matrix.{{ domain }};
 
     ssl on;
@@ -22,8 +22,8 @@ server {
 
 server {
     listen 8448 ssl default_server;
-    #listen [::]:8448 ssl default_server;
-    server_name matrix.{{ domain }};
+    listen [::]:8448 ssl default_server;
+    server_name {{ subdomain }}.{{ domain }};
 
     ssl on;
     ssl_certificate /etc/letsencrypt/live/{{ domain }}/fullchain.pem;
