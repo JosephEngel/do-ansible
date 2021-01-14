@@ -1,5 +1,5 @@
 server {
-    server_name {{ subdomain.{{ domain }};
+    server_name {{ subdomain }}.{{ domain }};
     set $upstream {{ ipaddr }}:8080;
 
     location / {
