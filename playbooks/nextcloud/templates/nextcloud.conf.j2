@@ -1,6 +1,6 @@
 server {
-    server_name {{ subdomain }}.{{ domain }};
-    set $upstream 192.168.1.110:80;
+    server_name {{ subdomain.{{ domain }};
+    set $upstream {{ ipaddr }}:8080;
 
     location / {
         proxy_pass_header Authorization;
@@ -24,13 +24,13 @@ server {
 }
 
 server {
-    if ($host = {{ subdomain }}.{{ domain }}) {
+    if ($host = {{ subdomain.{{ domain }}) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
 
 
     listen 80;
-    server_name {{ subdomain }}.{{ domain }};
+    server_name {{ subdomain.{{ domain }};
     return 404; # managed by Certbot
 
 }
