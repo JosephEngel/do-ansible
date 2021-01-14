@@ -1,5 +1,5 @@
 ---
-ipaddr: 192.81.215.116
+ipaddr: '192.81.215.116'
 nextcloud_vol: /mnt/nextcloud
 
 # Nginx Settings
