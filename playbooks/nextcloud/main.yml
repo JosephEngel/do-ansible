@@ -42,7 +42,7 @@
         state: started
         #restart: yes
         recreate: yes
-        hostname: nextcloud.{{ domain }}.com
+        hostname: nextcloud.{{ domain }}
         restart_policy: "no"
         privileged: no #yes 
         network: slirp4netns
