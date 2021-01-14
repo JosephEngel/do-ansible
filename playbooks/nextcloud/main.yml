@@ -1,5 +1,5 @@
 ---
-- hosts: node
+- hosts: localhost
 #  become: true
 
   vars_files:
@@ -25,6 +25,7 @@
         mode: 777
         owner: ansible
         group: ansible
+      become: yes
 
     - name: Pull Nextcloud Container
       containers.podman.podman_image:
