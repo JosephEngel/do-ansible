@@ -7,7 +7,8 @@
 
   roles:
     #- firewalld
-    - nginx
+    #- nginx
+    - ansible-role-nginx
 
   tasks:
     - name: Copy Nginx server configuration in place.
