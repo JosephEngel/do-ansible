@@ -42,7 +42,7 @@
         state: started
         #restart: yes
         recreate: yes
-        hostname: nextcloud.engelcc.com
+        hostname: nextcloud.{{ domain }}.com
         restart_policy: "no"
         privileged: no #yes 
         network: slirp4netns
@@ -51,6 +51,6 @@
             PUID: '1000'
             PGID: '1000'
         volume:
-          - /mnt/nextcloud:/var/www/html:rw
+          - "{{ nextcloud_vol }}:/var/www/html:rw"
         detach: yes
       tags: container-restart
