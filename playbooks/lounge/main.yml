@@ -23,7 +23,7 @@
       file:
         path: "{{ podman_vol }}"
         state: directory
-        mode: 777
+        mode: 0777
         owner: ansible
         group: ansible
       become: yes
@@ -37,13 +37,13 @@
 
     - name: Restart TheLounge Container
       containers.podman.podman_container:
-        name: "{{ subdomain }}"
+        name: "lounge"
         image: thelounge/thelounge
         state: started
         #restart: yes
         recreate: yes
         hostname: "{{ subdomain }}.{{ domain }}"
-        restart_policy: "no"
+        restart_policy: on_failure[:3] #"no"
         privileged: no #yes 
         network: slirp4netns
         publish: "{{ listen_port }}:{{ container_port }}"

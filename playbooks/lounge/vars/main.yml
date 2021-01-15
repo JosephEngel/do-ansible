@@ -4,5 +4,5 @@ podman_vol: /mnt/lounge
 container_port: '9000'
 # Nginx Settings
 domain: striker.red
-subdomain: lounge
+subdomain: irc
 listen_port: '9009'
