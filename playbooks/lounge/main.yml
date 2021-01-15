@@ -31,7 +31,7 @@
     - name: Pull TheLounge Container
       containers.podman.podman_image:
         name: "docker.io/thelounge/thelounge"
-        tag: stable
+        tag: latest
         pull: yes
         state: present
 
