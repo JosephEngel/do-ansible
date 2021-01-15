@@ -1,0 +1,8 @@
+---
+ipaddr: '192.81.215.116'
+podman_vol: /mnt/lounge
+container_port: '9000'
+# Nginx Settings
+domain: striker.red
+subdomain: lounge
+listen_port: '9009'

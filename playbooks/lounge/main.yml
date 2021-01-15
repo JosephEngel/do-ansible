@@ -1,0 +1,56 @@
+---
+- hosts: localhost
+#  become: true
+
+  vars_files:
+    - vars/main.yml
+
+  roles:
+    #- firewalld
+    #- nginx
+    - ansible-role-nginx
+
+  tasks:
+    - name: Copy Nginx server configuration in place.
+      become: yes
+      template:
+        src: templates/lounge.conf.j2
+        dest: /etc/nginx/conf.d/lounge.conf
+        mode: 0644
+      notify: restart nginx
+
+    - name: Create dir for persistent vol
+      file:
+        path: "{{ podman_vol }}"
+        state: directory
+        mode: 777
+        owner: ansible
+        group: ansible
+      become: yes
+
+    - name: Pull TheLounge Container
+      containers.podman.podman_image:
+        name: "docker.io/thelounge/thelounge"
+        tag: stable
+        pull: yes
+        state: present
+
+    - name: Restart TheLounge Container
+      containers.podman.podman_container:
+        name: "{{ subdomain }}"
+        image: thelounge/thelounge
+        state: started
+        #restart: yes
+        recreate: yes
+        hostname: "{{ subdomain }}.{{ domain }}"
+        restart_policy: "no"
+        privileged: no #yes 
+        network: slirp4netns
+        publish: "{{ listen_port }}:{{ container_port }}"
+        env:
+            PUID: '1000'
+            PGID: '1000'
+        volume:
+          - "{{ podman_vol }}:/var/opt/thelounge:rw"
+        detach: yes
+      tags: container-restart
