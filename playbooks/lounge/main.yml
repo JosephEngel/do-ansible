@@ -43,7 +43,7 @@
         #restart: yes
         recreate: yes
         hostname: "{{ subdomain }}.{{ domain }}"
-        restart_policy: on_failure[:3] #"no"
+        restart_policy: on_failure:3 #"no"
         privileged: no #yes 
         network: slirp4netns
         publish: "{{ listen_port }}:{{ container_port }}"
