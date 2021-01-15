@@ -1,6 +1,6 @@
 server {
     server_name {{ subdomain }}.{{ domain }};
-    set $upstream {{ ipaddr }}:8080;
+    set $upstream {{ ipaddr }}:{{ listen_port }};
 
     location / {
         proxy_pass_header Authorization;
@@ -16,7 +16,6 @@ server {
         proxy_redirect off;
     }
 
-
     listen 443 ssl; # managed by Certbot
     ssl_certificate /etc/letsencrypt/live/{{ domain }}/fullchain.pem; # managed by Certbot
     ssl_certificate_key /etc/letsencrypt/live/{{ domain }}/privkey.pem; # managed by Certbot
@@ -27,7 +26,6 @@ server {
     if ($host = {{ subdomain }}.{{ domain }}) {
         return 301 https://$host$request_uri;
     } # managed by Certbot
-
 
     listen 80;
     server_name {{ subdomain }}.{{ domain }};

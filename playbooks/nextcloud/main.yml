@@ -6,8 +6,6 @@
     - vars/main.yml
 
   roles:
-    #- firewalld
-    #- nginx
     - ansible-role-nginx
 
   tasks:
@@ -46,7 +44,7 @@
         restart_policy: "no"
         privileged: no #yes 
         network: slirp4netns
-        publish: 8080:80
+        publish: "{{ listen_port }}:80" # 8080:80
         env:
             PUID: '1000'
             PGID: '1000'

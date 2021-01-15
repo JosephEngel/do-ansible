@@ -5,12 +5,4 @@ nextcloud_vol: /mnt/nextcloud
 # Nginx Settings
 domain: striker.red
 subdomain: nextcloud
-
-# Firewall Settings
-#firewalld_allowed_services:
-#  - ssh
-#  - http
-#  - https
-#
-#firewalld_allowed_tcp_ports:
-#  - "8080/tcp"
+listen_port: '8080'
